@@ -1,5 +1,3 @@
-Router als DHCP Server konfigurieren
-
 ip dhcp excluded-address 192.168.10.1 192.168.10.10
 ip dhcp pool R1-LAN
 network 192.168.10.0 255.255.255.0
@@ -10,13 +8,10 @@ interface g0/1
 ip address dhcp
 no shutdown
 
-Trunk-Port zum Access Point erstellen
-
 interface f0/23
 switchport mode trunk
 no shut
 
-Interface als Access VLAN 30 für Internetzugriff konfigurieren
 
 interface f0/24
 switchport mode Access
