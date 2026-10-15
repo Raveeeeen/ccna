@@ -1,0 +1,29 @@
+------------PC1-----------
+
+ping 192.168.10.11
+ping 192.168.11.10
+ping 192.168.30.12
+ping 192.168.31.12
+
+------------R1-------------
+
+R1# show access-lists ?
+  <1-199> ACL number
+  WORD ACL name
+  <cr>
+R1#show access-lists 
+Standard IP access list 11
+    10 deny 192.168.10.0 0.0.0.255
+    20 permit any
+R1# show run | include interface|access
+interface GigabitEthernet0/0
+interface GigabitEthernet0/1
+interface Serial0/0/0
+ ip access-group 11 out
+interface Serial0/0/1
+interface Vlan1
+access-list 11 deny 192.168.10.0 0.0.0.255
+access-list 11 permit any
+R1(config)# interface s0/0/0
+R1(config-if)# no ip access-group 11 out
+R1(config)# no access-list 11

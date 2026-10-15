@@ -1,0 +1,48 @@
+--------------R2--------------------
+
+R2(config)# access-list 1 deny 192.168.11.0 0.0.0.255
+R2(config)# access-list 1 permit any
+R2# show access-lists
+Standard IP access list 1
+      10 deny 192.168.11.0 0.0.0.255
+      20 permit any
+R2(config)# interface GigabitEthernet0/0
+R2(config-if)# ip access-group 1 out
+
+------------R3---------------------
+
+R3(config)# access-list 1 deny 192.168.10.0 0.0.0.255
+R3(config)# access-list 1 permit any
+R3# show access-lists
+Standard IP access list 1
+      10 deny 192.168.10.0 0.0.0.255
+      20 permit any
+R3(config)# interface GigabitEthernet0/0
+R3(config-if)# ip access-group 1 out
+
+----------PC1----------------------
+
+ping 192.168.11.10
+ping 192.168.20.254
+ping 192.168.30.10
+
+----------PC2----------------------
+
+ping 192.168.20.254
+ping 192.168.30.10
+
+----------PC3----------------------
+
+ping 192.168.20.254
+
+--------------R2--------------------
+R2# show access-lists
+Standard IP access list 1
+      10 deny 192.168.11.0 0.0.0.255 (4 match(es))
+      20 permit any (8 match(es))
+
+------------R3---------------------
+R3# show access-lists 
+Standard IP access list 1
+      10 deny 192.168.10.0 0.0.0.255 (4 match(es))
+      20 permit any (8 match(es))

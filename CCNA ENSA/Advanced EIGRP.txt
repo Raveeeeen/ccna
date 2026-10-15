@@ -1,0 +1,133 @@
+# Router 1:
+conf t
+hostname R1
+interface g0/0/0
+ip address 192.168.1.1 255.255.255.0
+Exit
+interface s0/2/0
+ip address 192.168.12.1 255.255.255.252
+no shut
+Exit
+interface s0/2/1 
+ip address 192.168.13.1 255.255.255.252
+no shut
+Exit
+interface lo1
+ip address 192.168.11.1 255.255.255.252
+Exit
+interface lo5
+ip address 192.168.11.5 255.255.255.252
+Exit
+interface lo9
+ip address 192.168.11.9 255.255.255.252
+Exit
+interface lo13
+ip address 192.168.11.13 255.255.255.252
+Exit
+
+router eigrp 1 
+network 192.168.1.0 
+network 192.168.12.0 0.0.0.3 
+network 192.168.13.0 0.0.0.3 
+network 192.168.11.0 0.0.0.3 
+network 192.168.11.4 0.0.0.3 
+network 192.168.11.8 0.0.0.3 
+network 192.168.11.12 0.0.0.3 
+passive-interface g0/0 
+auto-summary 
+exit
+int s0/0/0 
+bandwidth 1024 
+ip bandwidth-percent eigrp 1 75 
+ip hello-interval eigrp 1 60 
+ip hold-time eigrp 1 180 
+int s0/0/1 
+bandwidth 64 
+ip bandwidth-percent eigrp 1 40 
+ip hello-interval eigrp 1 60 
+ip hold-time eigrp 1 180 
+
+# Router 2
+conf t
+hostname R2
+interface g0/0/0
+ip address 192.168.2.1 255.255.255.0
+Exit
+interface s0/2/0
+ip address 192.168.12.2 255.255.255.252
+no shut
+Exit
+interface s0/2/1
+ip address 192.168.23.1 255.255.255.252
+no shut
+Exit
+interface lo1
+ip address 192.16822.1 255.255.255.252
+Exit
+
+router eigrp 1
+
+network 192.168.2.0 
+network 192.168.12.0 0.0.0.3 
+network 192.168.23.0 0.0.0.3 
+passive-interface g0/0 
+redistribute static 
+exit
+int s0/0/0 
+bandwidth 1024 
+ip bandwidth-percent eigrp 1 75 
+ip hello-interval eigrp 1 60 
+ip hold-time eigrp 1 180 
+Exit
+int s0/0/1 
+ip hello-interval eigrp 1 60 
+ip hold-time eigrp 1 180
+end
+
+# Router 3
+conf t
+hostname R3
+interface g0/0/0
+ip address 192.168.3.1 255.255.255.0
+Exit
+interface s0/2/0 
+ip address 192.168.13.2 255.255.255.252
+no shut
+Exit
+interface s0/2/1 
+ip address 192.168.23.2 255.255.255.252
+no shut
+Exit
+interface lo1
+ip address 192.168.33.1 255.255.255.252
+Exit
+interface lo5
+ip address 192.168.33.5 255.255.255.252
+Exit
+interface lo9
+ip address 192.168.33.9 255.255.255.252
+Exit
+interface lo13
+ip address 192.168.33.13 255.255.255.252
+end
+
+router eigrp 1 
+network 192.168.3.0 
+network 192.168.13.0 0.0.0.3 
+network 192.168.23.0 0.0.0.3 
+network 192.168.33.0 0.0.0.3 
+network 192.168.33.4 0.0.0.3 
+network 192.168.33.8 0.0.0.3 
+network 192.168.33.12 0.0.0.3 
+passive-interface g0/0 
+auto-summary 
+int s0/0/0 
+bandwidth 64 
+ip bandwidth-percent eigrp 1 40 
+ip hello-interval eigrp 1 60 
+ip hold-time eigrp 1 180 
+Exit
+int s0/0/1 
+ip hello-interval eigrp 1 60 
+ip hold-time eigrp 1 180
+End

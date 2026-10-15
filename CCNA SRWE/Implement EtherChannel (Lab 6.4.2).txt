@@ -1,0 +1,53 @@
+S1:
+vlan 10 
+Name Management
+Exit
+vlan 20
+Name Clients
+Exit
+vlan 999
+Name Parking_Lot
+interface f0/6
+switchport Access vlan 20
+Exit
+interface range f0/1-2
+switchport mode trunk
+channel-group 1 mode active
+no shut
+switchport trunk native vlan 1000
+
+interface range f0/3-5, f0/7-24, g0/1-2
+switchport Access vlan 999
+end 
+Show vlan Brief
+
+interface vlan 10
+ip address 192.168.10.11 255.255.255.0
+
+
+
+S2:
+vlan 10 
+Name Management
+Exit
+vlan 20
+Name Clients
+Exit
+vlan 999
+Name Parking_Lot
+interface f0/18
+switchport Access vlan 20
+Exit
+interface range f0/1-2
+switchport mode trunk
+channel-group 1 mode active
+no shut
+switchport trunk native vlan 1000
+
+interface range f0/3-17, f0/19-24, g0/1-2
+switchport Access vlan 999
+end 
+Show vlan Brief
+
+interface vlan 10
+ip address 192.168.10.12 255.255.255.0

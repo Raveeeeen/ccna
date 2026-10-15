@@ -1,0 +1,144 @@
+---------R1----------
+R1(config)# interface S0/0/0
+R1(config-if)# clock rate 64000
+R1(config)# no ip domain-lookup
+R1(config)# router ospf 101
+R1(config-router)# network 192.168.1.0 0.0.0.255 area 0
+R1(config-router)# network 10.1.1.0 0.0.0.3 area 0
+---------R2----------
+R2(config)# router ospf 101
+R2(config-router)# network 10.1.1.0 0.0.0.3 area 0
+R2(config-router)# network 10.2.2.0 0.0.0.3 area 0
+---------R3----------
+R3(config)# router ospf 101
+R3(config-router)# network 192.168.3.0 0.0.0.255 area 0
+R3(config-router)# network 10.2.2.0 0.0.0.3 area 0
+---------R1----------
+R1(config)# security passwords min-length 10
+R1(config)# enable algorithm-type scrypt secret cisco12345
+R1(config)# username admin01 algorithm-type scrypt secret admin01pass
+R1(config)# line console 0
+R1(config-line)# login local
+R1(config-line)# exec-timeout 5 0
+R1(config-line)# logging synchronous
+R1(config)# ip domain-name ccnasecurity.com
+R1(config)# crypto key generate rsa general-keys modulus 1024
+R1(config)# ip ssh version 2
+R1(config)# line vty 0 4
+R1(config-line)# login local
+R1(config-line)# exec-timeout 5 0
+R1(config-line)# transport input ssh
+R1# copy running-config startup-config
+R1(config)# crypto isakmp enable
+---------R3----------
+R3(config)# crypto isakmp enable
+---------R1----------
+R1(config)# crypto isakmp policy 10
+R1(config-isakmp)# hash sha
+R1(config-isakmp)# authentication pre-share
+R1(config-isakmp)# group 14
+R1(config-isakmp)# lifetime 3600
+R1(config-isakmp)# encryption aes 256
+R1(config-isakmp)# end
+R1# show crypto isakmp policy
+---------R3----------
+R3(config)# crypto isakmp policy 10
+R3(config-isakmp)# hash sha
+R3(config-isakmp)# authentication pre-share
+R3(config-isakmp)# group 14
+R3(config-isakmp)# lifetime 3600
+R3(config-isakmp)# encryption aes 256
+R3(config-isakmp)# end
+---------R1----------
+R1(config)# crypto isakmp key cisco123 address 10.2.2.1
+---------R3----------
+R3(config)# crypto isakmp key cisco123 address 10.1.1.1
+---------R1----------
+R1(config)# crypto ipsec transform-set 50 esp-aes 256 esp-sha-hmac
+R1(cfg-crypto-trans)# exit
+---------R3----------
+R3(config)# crypto ipsec transform-set 50 esp-aes 256 esp-sha-hmac
+R3(cfg-crypto-trans)# Exit
+---------R1----------
+R1(config)# crypto ipsec security-association lifetime seconds 1800
+---------R3----------
+R3(config)# crypto ipsec security-association lifetime seconds 1800
+---------R1----------
+R1(config)# access-list 101 permit ip 192.168.1.0 0.0.0.255 192.168.3.0 0.0.0.255
+---------R3----------
+R3(config)# access-list 101 permit ip 192.168.3.0 0.0.0.255 192.168.1.0 0.0.0.255
+---------R1----------
+R1(config)# crypto map CMAP 10 ipsec-isakmp
+R1(config-crypto-map)# match address 101
+R1(config-crypto-map)# set peer 10.2.2.1
+R1(config-crypto-map)# set pfs group14
+R1(config-crypto-map)# set transform-set 50
+R1(config-crypto-map)# set security-association lifetime seconds 900
+R1(config-crypto-map)# Exit
+---------R3----------
+R3(config)# crypto map CMAP 10 ipsec-isakmp
+R3(config-crypto-map)# match address 101
+R3(config-crypto-map)# set peer 10.1.1.1
+R3(config-crypto-map)# set pfs group14
+R3(config-crypto-map)# set transform-set 50
+R3(config-crypto-map)# set security-association lifetime seconds 900
+R3(config-crypto-map)# Exit
+---------R1----------
+R1(config)# interface S0/0/0
+R1(config-if)# crypto map CMAP
+*Jan 28 04:09:09.150: %CRYPTO-6-ISAKMP_ON_OFF: ISAKMP is ON
+R1(config)# end
+---------R3----------
+R3(config)# interface S0/0/1
+R3(config-if)# crypto map CMAP
+*Jan 28 04:10:54.138: %CRYPTO-6-ISAKMP_ON_OFF: ISAKMP is ON 
+R3(config)# end
+---------R1----------
+R1# show crypto ipsec transform-set
+Transform set 50: { esp-256-aes esp-sha-hmac  }
+   will negotiate = { Tunnel,  },
+
+Transform set #$!default_transform_set_1: { esp-aes esp-sha-hmac  }
+   will negotiate = { Transport,  },
+
+Transform set #$!default_transform_set_0: { esp-3des esp-sha-hmac  }
+   will negotiate = { Transport,  },
+---------R3----------
+R3# show crypto ipsec transform-set
+Transform set 50: { esp-256-aes esp-sha-hmac  }
+   will negotiate = { Tunnel,  },
+
+Transform set #$!default_transform_set_1: { esp-aes esp-sha-hmac  }
+   will negotiate = { Transport,  },
+
+Transform set #$!default_transform_set_0: { esp-3des esp-sha-hmac  }
+   will negotiate = { Transport,  },
+---------R1----------
+R1# show crypto map
+---------R3----------
+R3# show crypto map
+---------R1----------
+R1# show crypto isakmp sa
+R1# show crypto ipsec sa
+R1# debug ip ospf hello
+R1# ping
+Protocol [ip]:
+Target IP address: 192.168.3.1
+Repeat count [5]:
+Datagram size [100]:
+Timeout in seconds [2]:
+Extended commands [n]: y
+Source address or interface: 192.168.1.1
+Type of service [0]:
+Set DF bit in IP header? [no]:
+Validate reply data? [no]:
+Data pattern [0xABCD]:
+Loose, Strict, Record, Timestamp, Verbose[none]:
+Sweep range of sizes [n]:
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 192.168.3.1, timeout is 2 seconds:
+
+Packet sent with a source address of 192.168.1.1
+..!!!
+Success rate is 100 percent (3/5), round-trip min/avg/max = 92/92/92 MS
+R1# show crypto isakmp sa

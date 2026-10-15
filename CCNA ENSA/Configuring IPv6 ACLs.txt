@@ -1,0 +1,18 @@
+ipv6 access-list BLOCK_HTTP
+ deny tcp any host 2001:DB8:1:30::30 eq www
+ deny tcp any host 2001:DB8:1:30::30 eq 443
+ permit ipv6 any any
+
+interface <Interface-zur-Quelle>
+ ipv6 traffic-filter BLOCK_HTTP in
+
+ipv6 traffic-filter BLOCK_HTTP in
+
+
+ipv6 access-list BLOCK_ICMP
+ deny icmp any any
+ permit ipv6 any any
+
+interface <Interface-nahe-am-Ziel>
+ ipv6 traffic-filter BLOCK_ICMP in
+

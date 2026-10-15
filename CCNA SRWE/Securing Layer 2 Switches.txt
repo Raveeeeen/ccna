@@ -1,0 +1,229 @@
+S1(config)# interface vlan 1 
+S1(config-if)# ip address 192.168.1.2 255.255.255.0 
+S1(config-if)# no shutdown 
+
+S1(config)# no ip domain-lookup 
+
+S1(config)# no ip http server 
+S1(config)# no ip http secure-server 
+
+enable algorithm-type scrypt secret cisco12345 
+
+S1(config)# line console 0 
+S1(config-line)# password ciscoconpass 
+S1(config-line)# exec-timeout 5 0 
+S1(config-line)# login 
+S1(config-line)# logging synchronous 
+
+S1# conf t 
+S1(config)# ip domain-name ccnasecurity.com 
+
+S1(config)# username admin privilege 15 algorithm-type scrypt secret 
+cisco12345
+
+S1(config)# crypto key generate rsa general-keys modulus 1024 
+
+S1(config)# ip ssh version 2
+
+S1(config)# ip ssh time-out 90 
+S1(config)# ip ssh authentication-retries 2 
+
+S1(config)# line vty 0 4 
+S1(config-line)# privilege level 15 
+S1(config-line)# exec-timeout 5 0 
+S1(config-line)# login local 
+S1(config-line)# transport input ssh 
+S1(config-line)# exit 
+
+S1(config)# line vty 5 15 
+S1(config-line)# transport input None
+
+S1# show users 
+
+S1(config)# spanning-tree vlan 1 priority 0 
+S1(config)# exit 
+
+S1# show spanning-tree
+
+S1(config)# interface f0/1 
+S1(config-if)# switchport mode trunk
+
+S2(config)# interface f0/1 
+S2(config-if)# switchport mode trunk 
+
+S1# show interfaces trunk
+
+S1(config)# interface f0/1 
+S1(config-if)# switchport trunk native vlan 99 
+S1(config-if)# end 
+
+S2(config)# interface f0/1 
+S2(config-if)# switchport trunk native vlan 99 
+S2(config-if)# end
+
+S1(config)# interface f0/1 
+S1(config-if)# switchport nonegotiate 
+S2(config)# interface f0/1 
+S2(config-if)# switchport nonegotiate 
+
+S1# show run | begin 0/1 
+
+S1(config)# interface f0/5 
+S1(config-if)# switchport mode Access
+
+S1(config)# interface f0/6 
+S1(config-if)# switchport mode access 
+
+S2(config)# interface f0/18 
+S2(config-if)# switchport mode access 
+
+S1(config)# interface f0/5 
+S1(config-if)# spanning-tree portfast
+
+S1(config)# interface f0/6 
+S1(config-if)# spanning-tree portfast 
+
+S2(config)# interface f0/18 
+S2(config-if)# spanning-tree portfast
+
+S1(config)# interface f0/6 
+S1(config-if)# spanning-tree bpduguard enable
+
+S2(config)# interface f0/18 
+S2(config-if)# spanning-tree bpduguard enable
+
+show spanning-tree interface f0/6 detail 
+
+S2(config)# interface g0/1 
+S2(config-if)# spanning-tree guard root 
+
+S2# show run | begin Gig 
+
+S2# show spanning-tree inconsistentports
+
+S2(config)# spanning-tree loopguard default 
+
+S2# show spanning-tree summary
+
+R1# show interfaces g0/1 
+
+S1(config)# interface f0/5 
+
+S1(config-if)# shutdown
+
+S1(config-if)# switchport port-security 
+
+S1(config-if)# switchport port-security mac-address xxxx.xxxx.xxxx
+
+S1(config-if)# no shutdown
+
+S1# show port-security interface f0/5
+
+R1# ping 192.168.1.10 
+
+R1(config)# interface G0/1 
+R1(config-if)# mac-address aaaa.bbbb.cccc 
+R1(config-if)# end 
+
+
+S1# show port-security 
+
+S1# show port-security 
+
+S1# show port-security address
+
+R1(config)# interface g0/1 
+R1(config-if)# no mac-address aaaa.bbbb.cccc 
+
+S1(config)# interface f0/5 
+S1(config-if)# shutdown 
+S1(config-if)# no shutdown
+
+R1# ping 192.168.1.10 
+
+S1(config)# interface f0/5 
+S1(config-if)# no switchport port-security 
+S1(config-if)# no switchport port-security mac-address fc99.4775.c3e1 
+
+S1(config)# default interface f0/5 
+S1(config)# interface f0/5
+
+S2(config)# interface f0/18 
+S2(config-if)# switchport mode access 
+S2(config-if)# switchport port-security 
+S2(config-if)# switchport port-security maximum 3 
+S2(config-if)# switchport port-security violation shutdown 
+S2(config-if)# switchport port-security aging time 120 
+
+S1(config)# interface range f0/2 - 4 
+S1(config-if-range)# shutdown 
+S1(config-if-range)# interface range f0/7 - 24 
+S1(config-if-range)# shutdown 
+S1(config-if-range)# interface range g0/1 - 2 
+S1(config-if-range)# shutdown
+
+S2(config)# interface range f0/2 – 17 , f0/19 – 24 , g0/1 - 2 
+S2(config-if-range)# shutdown 
+
+S1(config)# vlan 20 
+S1(config-vlan)# name Users 
+S2(config)# vlan 20 
+S2(config-vlan)# name Users
+
+S1(config)# interface f0/6 
+S1(config-if-range)# switchport access vlan 20 
+S2(config)# interface f0/18 
+S2(config-if)# switchport access vlan 20 
+
+S1(config)# interface f0/6 
+S1(config-if)# switchport protected 
+S1(config-if)# interface f0/7 
+S1(config-if)# switchport protected 
+S1(config-if)# no shut 
+S1(config-if)# end 
+
+S1# show interfaces fa0/6 switchport
+
+R1(config)# ip dhcp pool CCNAS 
+R1(dhcp-config)# network 192.168.1.0 255.255.255.0 
+R1(dhcp-config)# default-router 192.168.1.1  
+R1(config)# ip dhcp excluded-address 192.168.1.1 192.168.1.4 
+
+R1(config)# ip dhcp pool 20Users 
+R1(dhcp-config)# network 192.168.20.0 255.255.255.0 
+R1(dhcp-config)# default-router 192.168.20.1  
+R1(config)# ip dhcp excluded-address 192.168.20.1  
+
+R1(config)# interface g0/1 
+R1(config-if)# shutdown 
+R1(config-if)# no ip address 192.168.1.1 255.255.255.0 
+R1(config-if)# no shutdown 
+R1(config-if)# int g0/1.1 
+R1(config-if)# encapsulation dot1q 1 
+R1(config-if)# ip address 192.168.1.1 255.255.255.0 
+R1(config-if)# int g0/1.20 
+R1(config-if)# encapsulation dot1q 20 
+R1(config-if)# ip address 192.168.20.1 255.255.255.0 
+R1(config-if)# int g0/1.99 
+R1(config-if)# encapsulation dot1q 99 
+R1(config-if)# ip address 192.168.99.1 255.255.255.0 
+
+S1(config)# int f0/5 
+S1(config-if)# switchport mode trunk 
+S1(config-if)# switchport trunk native vlan 99 
+
+S1(config)# ip dhcp snooping 
+S1(config)# ip dhcp snooping information Option
+
+S1(config)# ip dhcp snooping vlan 1,20
+
+S1(config)# interface f0/6 
+S1(config-if)# ip dhcp snooping limit rate 10 
+S1(config-if)# exit 
+
+S1(config)# interface f0/5 
+S1(config-if)# description connects to DHCP server 
+S1(config-if)# ip dhcp snooping trust 
+
+S1# show ip dhcp snooping 
+

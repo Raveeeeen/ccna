@@ -1,0 +1,51 @@
+-----------------R1-------------------------
+
+R1(config)# router ospf 1
+R1(config-router)# router-id 1.1.1.1
+R1(config-router)# network 192.168.1.0 0.0.0.255 area 1
+R1(config-router)# network 192.168.2.0 0.0.0.255 area 1
+R1(config-router)# network 192.168.12.0 0.0.0.3 area 0
+R1(config)# interface Loopback0
+R1(config)# ip address 209.165.200.225 255.255.255.252
+R1(config)# interface Loopback1
+R1(config)# ip address 192.168.1.1 255.255.255.0
+R1(config)# interface Loopback2
+R1(config)# ip address 192.168.2.1 255.255.255.0
+R1(config)# interface s0/2/0
+R1(config-if)# ip address 192.168.12.1 255.255.255.252
+R1(config-router)# passive-interface lo1
+R1(config-router)# passive-interface lo2
+R1(config-router)# Exit
+R1(config)# ip route 0.0.0.0 0.0.0.0 lo0
+R1(config)# router ospf 1
+R1(config-router)# default-information originate
+
+-----------------R2-------------------------
+
+R2(config)# router ospf 1
+R2(config-router)# router-id 2.2.2.2
+R2(config-router)# network 192.168.12.0 0.0.0.3 area 0
+R2(config-router)# network 192.168.23.0 0.0.0.3 area 3
+R2(config-router)# network 192.168.6.0 0.0.0.255 area 3
+R2(config)# interface Loopback6
+R2(config-router)# ip address 192.168.6.1 255.255.255.0
+R2(config-router)# passive-interface lo6
+R2(config)# interface s0/2/0
+R2(config-if)# ip address 192.168.12.2 255.255.255.252
+R2(config)# interface s0/2/1
+R2(config-if)# ip address 192.168.23.1 255.255.255.252
+-----------------R3-------------------------
+
+R3(config)# router ospf 1
+R3(config-router)# router-id 3.3.3.3
+R3(config-router)# network 192.168.23.0 0.0.0.3 area 3
+R3(config-router)# network 192.168.4.0 0.0.0.255 area 3
+R3(config-router)# network 192.168.5.0 0.0.0.255 area 3
+R3(config)# interface Loopback4
+R3(config-router)# ip address 192.168.4.1 255.255.255.0
+R3(config)# interface Loopback5
+R3(config-router)# ip address 192.168.5.1 255.255.255.0
+R3(config)# interface s0/2/1
+R3(config-if)#ip address 192.168.23.2 255.255.255.252
+R3(config-router)# passive-interface lo4
+R3(config-router)# passive-interface l05

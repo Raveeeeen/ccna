@@ -1,0 +1,67 @@
+-----------R1-------------
+R1(config)# ipv6 router ospf 1
+R1(config-rtr)# router-id 1.1.1.1
+interface Loopback0
+ipv6 address 2001:DB8:ACAD::1/64
+ipv6 ospf 1 area 1
+ipv6 ospf network point-to-point
+interface Loopback1
+ipv6 address 2001:DB8:ACAD:1::1/64
+ipv6 ospf 1 area 1
+ipv6 ospf network point-to-point
+interface Loopback2
+ipv6 address 2001:DB8:ACAD:2::1/64
+ipv6 ospf 1 area 1
+ipv6 ospf network point-to-point
+interface Loopback3
+ipv6 address 2001:DB8:ACAD:3::1/64
+ipv6 ospf 1 area 1
+ipv6 ospf network point-to-point
+interface s0/2/0
+ipv6 address FE80::1 link-local
+ipv6 address 2001:DB8:ACAD:12::1/64
+ipv6 ospf 1 area 0
+
+-----------R2-------------
+R2(config)# ipv6 router ospf 1
+R2(config-rtr)# router-id 2.2.2.2
+interface Loopback8
+ipv6 address 2001:DB8:ACAD:8::1/64
+ipv6 ospf 1 area 0
+ipv6 ospf network point-to-point
+interface s0/2/0
+no ip address
+ipv6 address FE80::2 link-local
+ipv6 address 2001:DB8:ACAD:12::2/64
+ipv6 ospf 1 area 0
+interface s0/2/1
+ipv6 address FE80::2 link-local
+ipv6 address 2001:DB8:ACAD:23::2/64
+ipv6 ospf 1 area 0
+R2# show ipv6 ospf interface brief 
+
+-----------R3-------------
+R3(config)# ipv6 router ospf 1
+R3(config-rtr)# router-id 3.3.3.3
+R3(config)# interface lo4
+interface Loopback4
+no ip address
+ipv6 address 2001:DB8:ACAD:4::1/64
+ipv6 ospf 1 area 2
+ipv6 ospf network point-to-point
+interface Loopback5
+ipv6 address 2001:DB8:ACAD:5::1/64
+ipv6 ospf 1 area 2
+ipv6 ospf network point-to-point
+interface Loopback6
+ipv6 address 2001:DB8:ACAD:6::1/64
+ipv6 ospf 1 area 2
+ipv6 ospf network point-to-point
+interface Loopback7
+ipv6 address 2001:DB8:ACAD:7::1/64
+ipv6 ospf 1 area 2
+ipv6 ospf network point-to-point
+interface s0/2/1
+ipv6 address FE80::3 link-local
+ipv6 address 2001:DB8:ACAD:23::3/64
+R3# show ipv6 ospf  

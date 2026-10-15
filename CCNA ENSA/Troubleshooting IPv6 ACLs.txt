@@ -1,0 +1,25 @@
+ftp 2001:db8:cafe:2::2
+
+ipv6 access-list G0-ACCESS
+ deny tcp 2001:DB8:CAFE::/64 any eq www
+ permit ipv6 any any
+
+interface g0/0
+ ipv6 traffic-filter G0-ACCESS in
+
+ipv6 access-list G1-ACCESS
+ deny tcp 2001:DB8:CAFE:1::/64 host 2001:DB8:CAFE:2::2 eq ftp
+ permit ipv6 any any
+
+interface g0/1
+ ipv6 traffic-filter G1-ACCESS in
+
+ipv6 access-list SSH-ACCESS
+ permit tcp 2001:DB8:CAFE::/64 any eq 22
+ deny tcp 2001:DB8:CAFE:1::/64 any eq 22
+ deny tcp 2001:DB8:CAFE:2::/64 any eq 22
+ permit ipv6 any any
+
+line vty 0 4
+ ipv6 access-class SSH-ACCESS in
+ transport input ssh

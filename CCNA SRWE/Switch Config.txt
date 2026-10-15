@@ -1,0 +1,25 @@
+#remote config
+configure terminal
+interface vlan 99
+ip address 172.17.99.11 255.255.255.0
+no shutdown
+Show ip interface brief
+
+#configure ports
+conf t
+interface FastEthernet 0/1
+duplex full
+speed 100
+end
+
+#Interfaces anzeigen
+Show interfaces
+
+#SSH einrichten
+conf t
+interface FastEthernet 0/1
+switchport mode Access
+switchport Access vlan 99
+vlan brief
+
+

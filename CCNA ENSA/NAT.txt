@@ -1,0 +1,121 @@
+router(config)# hostname R1
+R1(config)# no ip domain-lookup
+R1(config)# enable secret class
+R1(config)# enable secret class
+R1(config)# line console 0
+R1(config-line)# password cisco
+R1(config-line)# Login
+R1(config)# line vty 0 4
+R1(config-line)# password cisco
+R1(config-line)# Login
+R1(config)# service password-encryption
+R1(config)# banner motd $ Authorized Users Only! $
+R1(config)# interface g0/0/0
+R1(config-if)# ip address 209.165.200.230 255.255.255.248
+R1(config-if)# no shutdown
+R1(config-if)# interface g0/0/1
+R1(config-if)# ip address 192.168.1.1 255.255.255.0
+R1(config-if)# no shutdown
+R1(config-if)# exit
+R1(config)# ip route 0.0.0.0 0.0.0.0 209.165.200.225
+R1(config)# exit
+R1# copy running-config startup-config
+router(config)# hostname R2
+
+R2(config)# no ip domain-lookup
+
+R2(config)# enable secret class
+
+R2(config)# line console 0
+R2(config-line)# password cisco
+R2(config-line)# login
+
+R2(config-line)# line vty 0 4
+R2(config-line)# password cisco
+R2(config-line)# login
+
+R2(config-line)# service password-encryption
+
+R2(config)# banner motd $ Authorized Users Only! $
+
+R2(config)# interface g0/0/0
+R2(config-if)# ip address 209.165.200.225 255.255.255.248
+R2(config-if)# no shutdown
+R2(config-if)# interface loopback 1
+R2(config-if)# ip address 209.165.200.1 255.255.255.224
+R2(config-if)# no shutdown
+R2(config-if)# end
+
+R2# copy running-config startup-config
+switch(config)# hostname S1
+S1(config)# no ip domain-lookup
+S1(config)# enable secret class
+S1(config)# line console 0
+S1(config-line)# password cisco
+S1(config-line)# Login
+S1(config)# line vty 0 15
+S1(config-line)# password cisco
+S1(config-line)# Login
+S1(config)# service password-encryption
+S1(config)# banner motd $ Authorized Users Only! $
+S1(config)# interface range f0/2-4, f0/7-24, g0/1-2
+S1(config-if-range)# shutdown
+S1(config)# interface vlan 1
+S1(config-if)# ip address 192.168.1.11 255.255.255.0
+S1(config-if)# no shutdown
+S1(config-if)# exit
+S1(config)# ip default-gateway 192.168.1.1
+S1# copy running-config startup-config
+switch(config)# hostname S2
+
+S2(config)# no ip domain-lookup
+
+S2(config)# enable secret class
+
+S2(config)# line console 0
+S2(config-line)# password cisco
+S2(config-line)# login
+
+S2(config-line)# line vty 0 15
+S2(config-line)# password cisco
+S2(config-line)# login
+
+S2(config-line)# service password-encryption
+
+S2(config)# banner motd $ Authorized Users Only! $
+
+S2(config)# interface range f0/2-17, f0/19-24, g0/1-2
+S2(config-if-range)# shutdown
+
+S2(config)# interface vlan 1
+S2(config-if)# ip address 192.168.1.12 255.255.255.0
+S2(config-if)# no shutdown
+S2(config-if)# exit
+S2(config)# ip default-gateway 192.168.1.1
+S2(config)# end
+
+S2# copy running-config startup-config
+R1(config)# access-list 1 permit 192.168.1.0 0.0.0.255
+R1(config)# ip nat pool PUBLIC_ACCESS 209.165.200.226 209.165.200.228 netmask 255.255.255.248
+R1(config)# ip nat inside source list 1 pool PUBLIC_ACCESS
+R1(config)# interface g0/0/1
+R1(config-if)# ip nat inside
+R1(config)# interface g0/0/0
+R1(config-if)# ip nat outside
+R1# show ip nat translations
+R1# show ip nat translations verbose
+R1# clear ip nat translations *
+R1# clear ip nat statistics
+R1(config)# no ip nat inside source list 1 pool PUBLIC_ACCESS
+R1(config)# ip nat inside source list 1 pool PUBLIC_ACCESS overload
+R1#show ip nat translations
+R1# clear ip nat translations *
+R1# clear ip nat statistics
+R1(config)# no ip nat inside source list 1 pool PUBLIC_ACCESS overload
+R1(config)# no ip nat pool PUBLIC_ACCESS
+R1(config)# ip nat inside source list 1 interface g0/0/0 overload
+R1# clear ip nat translations *
+R1# clear ip nat statistics
+R1(config)# ip nat inside source static 192.168.1.2 209.165.200.229
+
+

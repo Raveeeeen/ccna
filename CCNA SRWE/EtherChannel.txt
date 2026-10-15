@@ -1,0 +1,23 @@
+interface range f0/1-2
+switchport mode trunk
+switchport trunk native vlan 99
+channel-group 2 mode active
+no shut
+
+interface range f0/1-2
+switchport mode trunk
+switchport trunk native vlan 99
+channel-group 2 mode passive
+no shut
+
+interface range f0/3-4
+switchport mode trunk
+switchport trunk native vlan 99
+channel-group 3 mode active
+no shut
+
+interface range f0/3-4
+switchport mode trunk
+switchport trunk native vlan 99
+channel-group 3 mode passive
+no shut
